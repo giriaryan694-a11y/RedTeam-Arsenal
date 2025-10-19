@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedTeam Arsenal - Pentest Cheatsheets Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0015 0%, #1a0033 50%, #0f0020 100%);
+            color: #00ff88;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 20, 147, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3),
+                        inset 0 0 20px rgba(0, 255, 136, 0.1);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(0, 255, 136, 0.3),
+                            inset 0 0 20px rgba(0, 255, 136, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(0, 255, 136, 0.5),
+                            inset 0 0 30px rgba(0, 255, 136, 0.2);
+            }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88, 0 0 40px #ff1493;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 0 20px #00ff88, 0 0 40px #ff1493;
+                color: #00ff88;
+            }
+            50% {
+                text-shadow: 0 0 40px #00ff88, 0 0 60px #ff1493;
+                color: #00ffff;
+            }
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            color: #ff1493;
+            font-style: italic;
+            text-shadow: 0 0 10px #ff1493;
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 20, 147, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .card:hover {
+            border-color: #ff1493;
+            box-shadow: 0 0 40px rgba(255, 20, 147, 0.5),
+                        inset 0 0 20px rgba(255, 20, 147, 0.1);
+            transform: translateY(-5px);
+            background: rgba(30, 0, 60, 0.95);
+        }
+
+        .card h2 {
+            color: #ff1493;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-shadow: 0 0 10px #ff1493;
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 10px;
+        }
+
+        .card ul {
+            list-style: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .card li::before {
+            content: '▸';
+            color: #ff1493;
+            margin-right: 10px;
+            margin-left: -20px;
+            font-size: 1.2em;
+            transition: all 0.2s ease;
+        }
+
+        .card a {
+            color: #00ff88;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .card a:hover {
+            color: #ff1493;
+            text-shadow: 0 0 10px #ff1493;
+            border-bottom: 1px solid #ff1493;
+            padding-right: 5px;
+        }
+
+        .card li:hover {
+            padding-left: 30px;
+            color: #00ffff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 2px solid #00ff88;
+            margin-top: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .footer-text {
+            font-size: 1.3em;
+            color: #ff1493;
+            text-shadow: 0 0 15px #ff1493,
+                         0 0 30px #00ff88;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .footer-repo {
+            font-size: 0.9em;
+            color: #00ff88;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .tagline {
+                font-size: 1em;
+            }
+
+            .sections {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card h2 {
+                font-size: 1.4em;
+            }
+
+            header {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .tagline {
+                font-size: 0.9em;
+            }
+
+            .card h2 {
+                font-size: 1.2em;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .footer-text {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 RedTeam Arsenal</h1>
+            <p class="tagline">Your Ultimate Pentest & Red Team Cheatsheets Hub</p>
+        </header>
+
+        <div class="sections">
+            <!-- Web Application Security -->
+            <div class="card">
+                <h2>🌐 Web Application Security</h2>
+                <ul>
+                    <li><a href="https://portswigger.net/web-security/cross-site-scripting/cheat-sheet" target="_blank">XSS Cheatsheet</a></li>
+                    <li><a href="https://portswigger.net/web-security/sql-injection/cheat-sheet" target="_blank">SQL Injection Cheatsheet</a></li>
+                    <li><a href="https://portswigger.net/web-security/request-smuggling/cheat-sheet" target="_blank">Request Smuggling Cheatsheet</a></li>
+                    <li><a href="https://portswigger.net/web-security/xxe/cheat-sheet" target="_blank">XXE Cheatsheet</a></li>
+                    <li><a href="https://portswigger.net/web-security/authentication/password-based/cheat-sheet" target="_blank">Authentication Cheatsheet</a></li>
+                    <li><a href="https://payload.all.in/" target="_blank">Payload Cheatsheets</a></li>
+                    <li><a href="https://owasp.org/Top10/" target="_blank">OWASP Top 10</a></li>
+                </ul>
+            </div>
+
+            <!-- Network & Infrastructure -->
+            <div class="card">
+                <h2>🔧 Network & Infrastructure</h2>
+                <ul>
+                    <li><a href="https://nmap.org/docs/" target="_blank">Nmap Reference</a></li>
+                    <li><a href="https://github.com/danielmiessler/SecLists" target="_blank">SecLists Wordlists</a></li>
+                    <li><a href="https://github.com/projectdiscovery/nuclei" target="_blank">Nuclei Scanner</a></li>
+                    <li><a href="https://www.metasploit.com/" target="_blank">Metasploit Framework</a></li>
+                    <li><a href="https://www.exploit-db.com/" target="_blank">Exploit-DB Repository</a></li>
+                    <li><a href="https://github.com/m4ll0k/AutoRecon" target="_blank">AutoRecon Script</a></li>
+                </ul>
+            </div>
+
+            <!-- Windows Privilege Escalation -->
+            <div class="card">
+                <h2>🪟 Windows PrivEsc</h2>
+                <ul>
+                    <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank">PayloadsAllTheThings</a></li>
+                    <li><a href="https://lolbas-project.github.io/" target="_blank">LOLBAS Project</a></li>
+                    <li><a href="https://github.com/gentilkiwi/mimikatz/wiki" target="_blank">Mimikatz Guide</a></li>
+                    <li><a href="https://book.hacktricks.xyz/windows-hardening/windows-privilege-escalation" target="_blank">PrivEsc Cheatsheet</a></li>
+                    <li><a href="https://github.com/PowerShellMafia/PowerSploit" target="_blank">PowerSploit</a></li>
+                    <li><a href="https://github.com/Flangvik/SharpCollection" target="_blank">Sharp Tools Collection</a></li>
+                </ul>
+            </div>
+
+            <!-- Linux Privilege Escalation -->
+            <div class="card">
+                <h2>🐧 Linux PrivEsc</h2>
+                <ul>
+                    <li><a href="https://gtfobins.github.io/" target="_blank">GTFOBins - SUID/SUDO</a></li>
+                    <li><a href="https://github.com/carlospolop/PEASS-ng" target="_blank">LinPEAS Cheatsheet</a></li>
+                    <li><a href="https://book.hacktricks.xyz/linux-hardening/privilege-escalation" target="_blank">PrivEsc Cheatsheet</a></li>
+                    <li><a href="https://github.com/kernel-exploits/linux-kernel-exploits" target="_blank">Kernel Exploits</a></li>
+                    <li><a href="https://github.com/initstring/dirty_sock" target="_blank">Dirty Sock Exploit</a></li>
+                    <li><a href="https://github.com/mzet-/linux-exploit-suggester" target="_blank">Exploit Suggester</a></li>
+                </ul>
+            </div>
+
+            <!-- OSINT & Reconnaissance -->
+            <div class="card">
+                <h2>🔍 OSINT & Reconnaissance</h2>
+                <ul>
+                    <li><a href="https://osintframework.com/" target="_blank">OSINT Framework</a></li>
+                    <li><a href="https://censys.io/" target="_blank">Censys Search</a></li>
+                    <li><a href="https://www.shodan.io/" target="_blank">Shodan IoT Search</a></li>
+                    <li><a href="https://github.com/laramies/theHarvester" target="_blank">TheHarvester</a></li>
+                    <li><a href="https://www.maltego.com/" target="_blank">Maltego</a></li>
+                    <li><a href="https://www.spiderfoot.net/" target="_blank">SpiderFoot</a></li>
+                </ul>
+            </div>
+
+            <!-- Cloud & Container Security -->
+            <div class="card">
+                <h2>☁️ Cloud & Container Security</h2>
+                <ul>
+                    <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/AWS" target="_blank">AWS Security</a></li>
+                    <li><a href="https://kubernetes.io/docs/concepts/security/" target="_blank">Kubernetes Security</a></li>
+                    <li><a href="https://docs.docker.com/engine/security/" target="_blank">Docker Security</a></li>
+                    <li><a href="https://github.com/aquasecurity/trivy" target="_blank">Trivy Scanner</a></li>
+                    <li><a href="https://github.com/aquasecurity/kube-bench" target="_blank">Kube-Bench</a></li>
+                    <li><a href="https://github.com/nccgroup/ScoutSuite" target="_blank">Scout Suite</a></li>
+                </ul>
+            </div>
+
+            <!-- Wireless & Physical Security -->
+            <div class="card">
+                <h2>📡 Wireless & Physical Security</h2>
+                <ul>
+                    <li><a href="https://www.aircrack-ng.org/" target="_blank">Aircrack-ng</a></li>
+                    <li><a href="https://github.com/bettercap/bettercap" target="_blank">Bettercap</a></li>
+                    <li><a href="https://github.com/dafthack/DomainPasswordSpray" target="_blank">Password Spraying</a></li>
+                    <li><a href="https://www.wifi-arsenal.com/" target="_blank">WiFi Arsenal</a></li>
+                    <li><a href="https://github.com/bluekitchen/btstack" target="_blank">Bluetooth Toolkit</a></li>
+                    <li><a href="https://github.com/evilsocket/pwnagotchi" target="_blank">Pwnagotchi</a></li>
+                </ul>
+            </div>
+
+            <!-- Frameworks & Standards -->
+            <div class="card">
+                <h2>📋 Frameworks & Standards</h2>
+                <ul>
+                    <li><a href="https://owasp.org/" target="_blank">OWASP Foundation</a></li>
+                    <li><a href="https://attack.mitre.org/" target="_blank">MITRE ATT&CK Framework</a></li>
+                    <li><a href="https://www.nist.gov/cyberframework" target="_blank">NIST Cybersecurity</a></li>
+                    <li><a href="https://www.cisecurity.org/" target="_blank">CIS Benchmarks</a></li>
+                    <li><a href="https://www.ptes.org/" target="_blank">Penetration Testing Execution Standard</a></li>
+                    <li><a href="https://www.open-std.org/jtc1/sc27/" target="_blank">ISO 27001/27002</a></li>
+                </ul>
+            </div>
+
+            <!-- Reverse Shell Generators -->
+            <div class="card">
+                <h2>💻 Reverse Shell Generators</h2>
+                <ul>
+                    <li><a href="https://www.revshells.com/" target="_blank">RevShells Generator</a></li>
+                    <li><a href="https://tex2e.github.io/reverse-shell-generator/index.html" target="_blank">Reverse Shell Generator</a></li>
+                    <li><a href="https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet" target="_blank">Reverse Shell Cheatsheet</a></li>
+                    <li><a href="https://giriaryan694-a11y.github.io/SQL-REVERSE-SHELL-GENERATOR/" target="_blank">SQL Reverse Shell Generator</a></li>
+                    <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Reverse%20Shell" target="_blank">Reverse Shell Payloads</a></li>
+                    <li><a href="https://github.com/0dayCTF/reverse-shell" target="_blank">Reverse Shell Cheatsheet</a></li>
+                </ul>
+            </div>
+
+            <!-- Privilege Escalation -->
+            <div class="card">
+                <h2>⬆️ Privilege Escalation</h2>
+                <ul>
+                    <li><a href="https://book.hacktricks.xyz/generic-methodologies-and-resources/privilege-escalation" target="_blank">PrivEsc General Guide</a></li>
+                    <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20escalation" target="_blank">Linux PrivEsc Payloads</a></li>
+                    <li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20escalation" target="_blank">Windows PrivEsc Payloads</a></li>
+                    <li><a href="https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS" target="_blank">LinPEAS - Linux Scanner</a></li>
+                    <li><a href="https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS" target="_blank">WinPEAS - Windows Scanner</a></li>
+                    <li><a href="https://gtfobins.github.io/" target="_blank">GTFOBins SUID/SUDO</a></li>
+                </ul>
+            </div>
+
+            <!-- Learning Platforms -->
+            <div class="card">
+                <h2>🎓 Learning Platforms</h2>
+                <ul>
+                    <li><a href="https://www.hackthebox.com/" target="_blank">HackTheBox</a></li>
+                    <li><a href="https://tryhackme.com/" target="_blank">TryHackMe</a></li>
+                    <li><a href="https://pentesterlab.com/" target="_blank">PentesterLab</a></li>
+                    <li><a href="https://www.portswigger.net/web-security" target="_blank">PortSwigger Labs</a></li>
+                    <li><a href="https://picoctf.org/" target="_blank">picoCTF</a></li>
+                    <li><a href="https://www.cybrary.it/" target="_blank">Cybrary Academy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-text">Made by Aryan Giri</div>
+            <div class="footer-repo">RedTeam Arsenal - Your Complete Pentest Cheatsheets Hub | Last Updated: 2025</div>
+        </footer>
+    </div>
+</body>
+</html>
