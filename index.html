@@ -41,6 +41,53 @@
             z-index: 1;
         }
 
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid #00ff88;
+            border-radius: 25px;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .search-box:focus {
+            border-color: #ff1493;
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.4);
+        }
+
+        .search-box::placeholder {
+            color: rgba(0, 255, 136, 0.5);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff1493;
+            font-size: 1.2em;
+            pointer-events: none;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #ff1493;
+            font-size: 1.2em;
+            margin: 50px 0;
+            display: none;
+        }
+
         header {
             text-align: center;
             margin-bottom: 50px;
@@ -270,7 +317,14 @@
             <p class="tagline">Your Ultimate Pentest & Red Team Cheatsheets Hub</p>
         </header>
 
-        <div class="sections">
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search cheatsheets, AI, or resources...">
+            <span class="search-icon">⚡</span>
+        </div>
+
+        <div class="no-results" id="noResults">No results found. Try different keywords!</div>
+
+        <div class="sections" id="sectionsContainer">
             <!-- Web Application Security -->
             <div class="card">
                 <h2>🌐 Web Application Security</h2>
@@ -494,6 +548,20 @@
                 </ul>
             </div>
 
+            <!-- AI for Red Team -->
+            <div class="card">
+                <h2>🤖 AI for Red Team</h2>
+                <ul>
+                    <li><a href="https://app.deephat.ai/" target="_blank">DeepHat AI - Security Assistant</a></li>
+                    <li><a href="https://www.hacktricks.ai/" target="_blank">HackTricks AI</a></li>
+                    <li><a href="https://hackergpt.app/" target="_blank">HackerGPT - Pentest AI</a></li>
+                    <li><a href="https://pentestgpt.ai/" target="_blank">PentestGPT AI</a></li>
+                    <li><a href="https://www.hackaigc.com/" target="_blank">HackAIGC</a></li>
+                    <li><a href="https://chat.freedomgpt.com/" target="_blank">FreedomGPT - Uncensored</a></li>
+                    <li><a href="https://xbow.com/" target="_blank">XBOW AI (Paid)</a></li>
+                </ul>
+            </div>
+
             <!-- Utility & Bypass Tools -->
             <div class="card">
                 <h2>🛠️ Utility & Bypass Tools</h2>
@@ -526,5 +594,60 @@
             <div class="footer-repo">RedTeam Arsenal - Your Complete Pentest Cheatsheets Hub | Last Updated: 2025</div>
         </footer>
     </div>
+
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const sectionsContainer = document.getElementById('sectionsContainer');
+        const noResults = document.getElementById('noResults');
+        const allCards = document.querySelectorAll('.card');
+
+        // Store original cards
+        const cardsArray = Array.from(allCards);
+
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                // Show all cards
+                cardsArray.forEach(card => {
+                    card.style.display = 'block';
+                });
+                noResults.style.display = 'none';
+                return;
+            }
+
+            let visibleCount = 0;
+
+            cardsArray.forEach(card => {
+                const title = card.querySelector('h2').textContent.toLowerCase();
+                const links = Array.from(card.querySelectorAll('a')).map(a => a.textContent.toLowerCase());
+                const allText = title + ' ' + links.join(' ');
+
+                if (allText.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show/hide no results message
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        });
+
+        // Add smooth scroll animation on search focus
+        searchInput.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.02)';
+        });
+
+        searchInput.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+        });
+    </script>
 </body>
 </html>
